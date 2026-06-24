@@ -9,28 +9,38 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-
     steps:
       - name: checkout code
         uses: actions/checkout@v4
-        
 
       - name: deploy via ssh
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.SSH_HOST }}
           username: root
-          key: ${{ secrets.SSH_key }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
-            cd "/root/jwt-auth";
-            # write .env file on the remote host from GitHub Secrets
-            cat > .env <<'EOF';
-            MONGO_URI=${{ secrets.MONGO_URI }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }}
-            GOOGLE_USER=${{ secrets.GOOGLE_USER }}
-            EOF;
-            git pull;
+            set -e
+
+            APP_DIR="/root/jwt-auth"
+
+            # Clone the repo if it doesn't exist yet, otherwise pull latest
+            if [ ! -d "$APP_DIR/.git" ]; then
+              git clone https://github.com/${{ github.repository }}.git "$APP_DIR"
+            fi
+
+            cd "$APP_DIR"
+            git fetch --all
+            git reset --hard origin/main
+
+            # Write .env file using printf to avoid heredoc issues
+            printf 'MONGO_URI=%s\n' '${{ secrets.MONGO_URI }}' > .env
+            printf 'JWT_SECRET=%s\n' '${{ secrets.JWT_SECRET }}' >> .env
+            printf 'GOOGLE_CLIENT_ID=%s\n' '${{ secrets.GOOGLE_CLIENT_ID }}' >> .env
+            printf 'GOOGLE_CLIENT_SECRET=%s\n' '${{ secrets.GOOGLE_CLIENT_SECRET }}' >> .env
+            printf 'GOOGLE_REFRESH_TOKEN=%s\n' '${{ secrets.GOOGLE_REFRESH_TOKEN }}' >> .env
+            printf 'GOOGLE_USER=%s\n' '${{ secrets.GOOGLE_USER }}' >> .env
+
+            # Rebuild and restart containers
+            docker compose down;
             docker compose up -d --build;
