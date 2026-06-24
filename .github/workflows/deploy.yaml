@@ -8,14 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
-    env:
-      MONGO_URI: ${{ secrets.MONGO_URI }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-      GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-      GOOGLE_USER: ${{ secrets.GOOGLE_USER }}
+
 
     steps:
       - name: checkout code
@@ -40,4 +33,4 @@ jobs:
             GOOGLE_USER=${{ secrets.GOOGLE_USER }}
             EOF
             git pull
-            docker-compose up -d --build
+            docker compose up -d --build
