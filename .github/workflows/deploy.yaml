@@ -22,7 +22,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_key }}
           script: |
-            cd "/root/jwt-auth"
+            cd "/root/jwt-auth";
             # write .env file on the remote host from GitHub Secrets
             cat > .env <<'EOF'
             MONGO_URI=${{ secrets.MONGO_URI }}
@@ -32,5 +32,5 @@ jobs:
             GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }}
             GOOGLE_USER=${{ secrets.GOOGLE_USER }}
             EOF
-            git pull
-            docker compose up -d --build
+            git pull;
+            docker compose up -d --build;
