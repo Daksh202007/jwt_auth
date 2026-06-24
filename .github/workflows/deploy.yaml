@@ -24,7 +24,7 @@ jobs:
 
             APP_DIR="/root/jwt-auth"
 
-            # Clone the repo if it doesn't exist yet, otherwise pull latest
+  
             if [ ! -d "$APP_DIR/.git" ]; then
               git clone https://github.com/${{ github.repository }}.git "$APP_DIR"
             fi
@@ -33,7 +33,7 @@ jobs:
             git fetch --all
             git reset --hard origin/main
 
-            # Write .env file using printf to avoid heredoc issues
+          
             printf 'MONGO_URI=%s\n' '${{ secrets.MONGO_URI }}' > .env
             printf 'JWT_SECRET=%s\n' '${{ secrets.JWT_SECRET }}' >> .env
             printf 'GOOGLE_CLIENT_ID=%s\n' '${{ secrets.GOOGLE_CLIENT_ID }}' >> .env
@@ -41,6 +41,6 @@ jobs:
             printf 'GOOGLE_REFRESH_TOKEN=%s\n' '${{ secrets.GOOGLE_REFRESH_TOKEN }}' >> .env
             printf 'GOOGLE_USER=%s\n' '${{ secrets.GOOGLE_USER }}' >> .env
 
-            # Rebuild and restart containers
+          
             docker compose down;
             docker compose up -d --build;
