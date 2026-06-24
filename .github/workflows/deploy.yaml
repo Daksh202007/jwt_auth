@@ -24,8 +24,9 @@ jobs:
 
             APP_DIR="/root/jwt-auth"
 
-  
+            # Clone the repo if it doesn't exist yet, otherwise pull latest
             if [ ! -d "$APP_DIR/.git" ]; then
+              rm -rf "$APP_DIR"
               git clone https://github.com/${{ github.repository }}.git "$APP_DIR"
             fi
 
