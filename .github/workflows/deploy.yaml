@@ -21,9 +21,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_key }}
-          script: |
+          script: 
             cd "/root/jwt-auth";
-            # write .env file on the remote host from GitHub Secrets
+          
             cat > .env <<'EOF';
             MONGO_URI=${{ secrets.MONGO_URI }}
             JWT_SECRET=${{ secrets.JWT_SECRET }}
