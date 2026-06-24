@@ -28,7 +28,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_key }}
-          script: |
-            cd /root/jwt-auth
-            git pull origin main
-            docker-compose up -d --build
+          script:
+            cd /root/jwt-auth;
+            git pull;
+            docker-compose up -d --build;
