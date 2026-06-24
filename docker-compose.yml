@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   app:
     build:
@@ -5,5 +6,12 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      -"3000:3000"
-    
+      - "3000:3000"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REFRESH_TOKEN=${GOOGLE_REFRESH_TOKEN}
+      - GOOGLE_USER=${GOOGLE_USER}
+

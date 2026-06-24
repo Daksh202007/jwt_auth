@@ -28,7 +28,16 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: root
           key: ${{ secrets.SSH_key }}
-          script:
-            cd "/root/jwt-auth";
-            git pull;
-            docker-compose up -d --build;
+          script: |
+            cd "/root/jwt-auth"
+            # write .env file on the remote host from GitHub Secrets
+            cat > .env <<'EOF'
+            MONGO_URI=${{ secrets.MONGO_URI }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }}
+            GOOGLE_USER=${{ secrets.GOOGLE_USER }}
+            EOF
+            git pull
+            docker-compose up -d --build
